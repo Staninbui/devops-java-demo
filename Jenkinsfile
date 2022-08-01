@@ -4,6 +4,10 @@ pipeline {
 
     // agent代理， 集群模式下表示任何一个机器可以用就执行。
     agent any
+    environment {
+        name = "zhangsan"
+        age = 17
+    }
 
     // 定义一些环境信息
 
@@ -13,6 +17,8 @@ pipeline {
         stage('compile') {
             steps {
                 echo "compiling..."
+                echo ${name}
+                echo ${age}
             }
         }
 
