@@ -21,6 +21,7 @@ pipeline {
                 sh "git --version"
                 sh "docker version"
 //                 sh "mvn -v"
+                echo "env check done"
             }
         }
 
