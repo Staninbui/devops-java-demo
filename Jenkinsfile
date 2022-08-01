@@ -17,8 +17,8 @@ pipeline {
         stage('compile') {
             steps {
                 echo "compiling..."
-                echo ${name}
-                echo ${age}
+                echo "${name}"
+                echo "${age}"
             }
         }
 
