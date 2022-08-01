@@ -10,6 +10,8 @@ pipeline {
         name = "zhangsan"
         age = 17
         WS = "${WORKSPACE}"
+        IMAGE_VERSION = "v1.0"
+        ALIYUN_SECRTE=credentials("aliyun-docker-repo")
     }
 
     // 定义一些环境信息
@@ -74,6 +76,35 @@ pipeline {
                 sh "docker version"
                 sh "pwd && ls -alh"
                 sh "docker build -t java-devops-demo . "
+            }
+        }
+
+        // 推送镜像
+        stage('push image') {
+                        input {
+                            message "需要推送远程镜像吗?"
+                            ok "需要"
+                            parameters {
+                                string(name: 'APP_VER', defaultValue: 'v1.0', description: '生产环境需要部署的版本')
+                                choice choices: ['bj-01', 'sh-02', 'wuhan-01'], description: '部署的大区', name: 'DEPLOY_WHERE'
+                            }
+                        }
+            steps {
+                echo "$APP_VER"
+                script {
+                    def where = "${DEPLOY_WHERE}"
+                    if (where == 'bj-01') {
+                        sh "echo 部署到北京01区"
+                    } else if (where == 'sh-02') {
+                        sh "echo 部署到上海02区"
+                    } else {
+                        sh "echo 部署到武汉01区"
+                        withCredentials([usernamePassword(credentialsId: 'aliyun-docker-repo', passwordVariable: 'ali_pwd', usernameVariable: 'ali_user')])
+                        sh "docker login -u ${ali_user} -p ${ali_pwd}   registry.cn-hangzhou.aliyuncs.com"
+                        sh "docker tag java-devops-demo registry.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}"
+                        sh "docker push registry.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}"
+                    }
+                }
             }
         }
 
