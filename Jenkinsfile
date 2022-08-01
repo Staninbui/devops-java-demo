@@ -14,6 +14,14 @@ pipeline {
 
     // 定义流水线的加工流程
     stages {
+        // 环境检查必须， 当环境
+        stage('env check') {
+            sh "java -version"
+            sh "git --version"
+            sh "docker version"
+            sh "mvn -v"
+        }
+
         // 编译 -> 测试 -> 打包 -> 部署
         stage('compile') {
             steps {
