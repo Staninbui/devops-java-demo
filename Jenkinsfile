@@ -99,10 +99,12 @@ pipeline {
                         sh "echo 部署到上海02区"
                     } else {
                         sh "echo 部署到武汉01区"
-                        withCredentials([usernamePassword(credentialsId: 'aliyun-docker-repo', passwordVariable: 'ali_pwd', usernameVariable: 'ali_user')])
-                        sh "docker login -u ${ali_user} -p ${ali_pwd}   registry.cn-hangzhou.aliyuncs.com"
-                        sh "docker tag java-devops-demo registry.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}"
-                        sh "docker push registry.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}"
+                        withCredentials([usernamePassword(credentialsId: 'aliyun-docker-repo', passwordVariable: 'ali_pwd', usernameVariable: 'ali_user')]) {
+                            sh "docker login -u ${ali_user} -p ${ali_pwd}   registry.cn-hangzhou.aliyuncs.com"
+                            sh "docker tag java-devops-demo registry.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}"
+                            sh "docker push registry.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}"
+                        }
+
                     }
                 }
             }
