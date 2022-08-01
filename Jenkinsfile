@@ -151,6 +151,7 @@ pipeline {
         stage('deploy') {
             steps {
                 echo "deploy..."
+                echo "deployeee"
                 // run之前把上一次的容器移除，命个名，这样就好对应操作了。
                 sh "docker rm -f java-devops-demo-dev"
                 sh "docker run -d -p 8888:8080 --name java-devops-demo-dev java-devops-demo"
