@@ -22,6 +22,7 @@ pipeline {
                 sh "docker version"
 //                 sh "mvn -v"
                 echo "env check done"
+                echo "env check done"
             }
         }
 
