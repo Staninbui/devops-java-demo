@@ -100,7 +100,7 @@ pipeline {
                     } else {
                         sh "echo 部署到武汉01区"
                         withCredentials([usernamePassword(credentialsId: 'aliyun-docker-repo', passwordVariable: 'ali_pwd', usernameVariable: 'ali_user')]) {
-                            sh 'docker login -u $ali_user -p $ali_pwd   registry-internal.cn-shanghai.aliyuncs.com'
+                            sh 'docker login -u $ali_user --password-stdin $ali_pwd   registry-internal.cn-shanghai.aliyuncs.com'
                             sh 'docker tag java-devops-demo registry-internal.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}'
                             sh 'docker push registry-internal.cn-shanghai.aliyuncs.com/stanyang/java-devops-demo:${APP_VER}'
                         }
