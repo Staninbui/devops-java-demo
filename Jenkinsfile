@@ -66,6 +66,7 @@ pipeline {
         stage('build') {
             steps {
                 echo "build..."
+                echo "test build..."
             }
         }
         stage('deploy') {
