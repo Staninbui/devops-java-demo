@@ -13,4 +13,9 @@ public class TestController {
     public String getUser() {
         return "Hello";
     }
+
+    @GetMapping("product")
+    public String getProduct() {
+        return "product interface";
+    }
 }
