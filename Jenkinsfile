@@ -9,6 +9,7 @@ pipeline {
     environment {
         name = "zhangsan"
         age = 17
+        WS = "${WORKSPACE}"
     }
 
     // 定义一些环境信息
@@ -52,7 +53,10 @@ pipeline {
                 // jar包来推送给maven
                 sh 'pwd && ls -alh'
                 sh 'mvn -v'
-                sh 'mvn clean package -s "/var/jenkins_home/appconfig/maven/settings.xml" -Dmaven.test.skip=true'
+                sh "echo ${WS}"
+                // 每一行指令都和上下文环境有关，上下命令之间是独立的。
+                // 因此这种命令需要 && 写在一起用。
+                sh 'cd ${WS} && mvn clean package -s "/var/jenkins_home/appconfig/maven/settings.xml" -Dmaven.test.skip=true'
                 sh "echo 打包成功"
             }
         }
@@ -63,15 +67,21 @@ pipeline {
                 echo "second test..."
             }
         }
+        // 生成镜像
         stage('build') {
             steps {
                 echo "build..."
-                echo "test build..."
+                sh "docker version"
+                sh "pwd && ls -alh"
+                sh "docker build -t java-devops-demo . "
             }
         }
         stage('deploy') {
             steps {
                 echo "deploy..."
+                // run之前把上一次的容器移除，命个名，这样就好对应操作了。
+                sh "docker rm java-devops-demo-dev"
+                sh "docker run -d -p 8888:8080 --name java-devops-demo-dev java-devops-demo"
             }
         }
     }
